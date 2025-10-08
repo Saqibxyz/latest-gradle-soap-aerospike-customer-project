@@ -1,0 +1,71 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.rest'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot soap'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'com.sun.xml.ws:jaxws-rt:4.0.1'
+    implementation 'com.sun.xml.ws:jaxws-tools:4.0.1'
+    implementation 'jakarta.xml.ws:jakarta.xml.ws-api:4.0.0'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
+    implementation 'org.glassfish.jaxb:jaxb-core:2.3.0.1'
+    implementation 'org.glassfish.jaxb:jaxb-runtime:2.3.0.1'
+    implementation 'org.apache.httpcomponents:httpclient:4.5.14'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+tasks.register("wsImport") {
+    doLast {
+        def generatedSourcesDir = layout.buildDirectory.dir("generated-sources/wsimport").get().asFile
+        if (!generatedSourcesDir.exists()) {
+            generatedSourcesDir.mkdirs()
+        }
+
+        ant.taskdef(name: 'wsimport',
+                classname: 'com.sun.tools.ws.ant.WsImport',
+                classpath: configurations.compileClasspath.asPath)
+
+        ant.wsimport(
+                keep: true,
+                verbose: true,
+                debug: true,
+                destdir: generatedSourcesDir,
+                sourcedestdir: generatedSourcesDir,
+                wsdl: "http://localhost:8080/ws/aerospike.wsdl"
+        )
+    }
+}
+
+
+sourceSets {
+    main {
+        java {
+            srcDirs += layout.buildDirectory.dir("generated-sources/wsimport").get().asFile
+        }
+    }
+}
+

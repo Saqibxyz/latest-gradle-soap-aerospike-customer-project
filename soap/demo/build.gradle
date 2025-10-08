@@ -1,0 +1,44 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.5.6'
+	id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.unbroken-dome.xjc' version '2.0.0'
+}
+xjc {
+    xjcVersion = '3.0'
+    srcDirName = 'resources/xsd'
+    extension = true
+
+}
+group = 'com.soap'
+version = '0.0.1-SNAPSHOT'
+description = 'Demo project for Spring Boot soap'
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'com.aerospike:spring-data-aerospike:5.2.0'
+    implementation 'wsdl4j:wsdl4j'
+    implementation("javax.xml.bind:jaxb-api:2.3.0")
+    implementation 'com.aerospike:aerospike-client-jdk8:9.0.5'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+}
+
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
+
+

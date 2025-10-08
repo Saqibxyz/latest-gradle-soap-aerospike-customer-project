@@ -100,8 +100,19 @@ src
             └── DemoApplication
 
 ```
->To run this project, make sure aerospike server is running on localhost with port 3000
+#### To run this project
+>1. make sure aerospike server is running on localhost with port 3000
+>2. Inside soap project, run
+```
+./gradlew xjcGenerate
+```
+>4. Inside rest,run
+```
+./gradlew wsImport
+```
+> start soap app first and then rest app
 #### Created by Saqib Ayoub
+
 
 
 
